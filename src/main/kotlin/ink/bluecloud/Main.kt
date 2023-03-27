@@ -12,17 +12,23 @@ fun main() {
 
     val javaHome = System.getenv("JAVA_HOME")
 
+    //generate powershell script
     pathList.forEach {
-        val bat = """
-            set JAVA_HOME=${it.value}
-            set PATH=${System.getenv("PATH").replace(javaHome, it.value)}
-        """.trimIndent()
-
         val powershell = """
             $ env:JAVA_HOME = "${it.value}"
             $ env:PATH = "${System.getenv("PATH").replace(javaHome, it.value)}"
         """.trimIndent().replace(" ", "")
 
         Files.writeString(Paths.get("${it.key}.ps1"), powershell)
+    }
+
+    //generate bat script
+    pathList.forEach {
+        val bat = """
+            set JAVA_HOME=${it.value}
+            set PATH=${System.getenv("PATH").replace(javaHome, it.value)}
+        """.trimIndent()
+
+        Files.writeString(Paths.get("${it.key}.bat"), bat)
     }
 }
